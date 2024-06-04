@@ -3,66 +3,63 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-
         flashCardProgramm();
-
-
     }
-    public static void frageAntwort () {
-        Scanner scanner = new Scanner(System.in);
-        int id = 1;
-        QueryDB.frageById(id);
-        System.out.println("Willst du die Antwort sehen?\n"+
-                "ja: -> zeigt die Antwort\n" +
-                "nein: -> nächste Frage");
 
-        String weiterOderNicht = scanner.nextLine();
-        switch(weiterOderNicht) {
-            case "ja" -> QueryDB.antwortById(id);
-            case "nein" -> { System.out.print("nächste ");
-                            QueryDB.frageById(id + 1);}
-        }
-        scanner.close();
-    }
 
     public static void flashCardProgramm () {
-        int id = 1;
-        while (true){
-            Scanner scanner = new Scanner(System.in);
-            System.out.println
-                    ("1: Frage zeigen\n"+
-                            "2: Antwort zeigen\n"+
-                            "3: Nächste Frage\n"+
-                            "4: Vorhärige Frage\n"+
-                            "5: Beenden");
+        try {
+            int id = 1;
+            while (true){
+                Scanner scanner = new Scanner(System.in);
+                System.out.println
+                        ("\n1: Frage zeigen\n"+
+                                "2: Antwort zeigen\n"+
+                                "3: Nächste Frage\n"+
+                                "4: Vorhärige Frage\n"+
+                                "5: Beenden");
 
-            int choice = scanner.nextInt();
+                int choice = scanner.nextInt();
+                if ( choice == 1){ // Frage mit der ID 1 wird aufgerufen
+                    System.out.println("Frage Nr.: " + id );
+                    System.out.println(QueryDB.frageById(id));
 
-            if ( choice == 1){
-                System.out.println("Frage Nr.: " + id );
-                QueryDB.frageById(id);
-            } else if ( choice == 2 ) {
-                System.out.println("Antwort Nr.: " + id );
-                QueryDB.antwortById(id);
-            } else if ( choice == 3) {
-                id = id +1;
-                System.out.println("Frage Nr.: " + id );
-                QueryDB.frageById(id);
-            } else if ( choice == 4) {
-                if (id > 1) {
-                    id = id -1;
-                    System.out.println("Frage Nr.: " + id );
-                    QueryDB.frageById(id);
-                } else {
-                    id = 1;
-                    System.out.println("Frage Nr.: " + id );
-                    QueryDB.frageById(id);
+                } else if ( choice == 2 ) { // Antwort mit der ID 1 wird aufgerufen
+                    System.out.println("Antwort Nr.: " + id );
+                    System.out.println(QueryDB.antwortById(id));
+
+                } else if ( choice == 3) { //Nächste Frage die ID + 1
+                    id = id +1; // Id wird um 1 hochgesetzt
+                    String availability = QueryDB.frageById(id);//availability ist return für"nichts"
+                    QueryDB.frageById(id); //wird aufgerufen "nichts" um id wieder auf 1 zu setzen
+                    if (availability == "nichts") { //wenn frageById = "nichts" dann ID = 1
+                        id = 1;
+                        System.out.println("Frage Nr.: " + id );
+                        System.out.println(QueryDB.frageById(id));
+                    } else { //wenn frageById Frage verfügbar - wird die frage ausgegeben
+                        System.out.println("Frage Nr.: " + id );
+                        System.out.println(QueryDB.frageById(id));
+                    }
+
+                } else if ( choice == 4) {// Vorherige Frage anzeigen
+                    if (id > 1) {//wenn die ID größer als 1 dann -1
+                        id = id -1;
+                        System.out.println("Frage Nr.: " + id );
+                        System.out.println(QueryDB.frageById(id));
+                    } else { // wenn die ID 1 wird die ID auf 1 gesetzt
+                        id = 1;
+                        System.out.println("Frage Nr.: " + id );
+                        System.out.println(QueryDB.frageById(id));
+                    }
+
+                } else if ( choice == 5) {//Methode wird Geshloßen
+                    System.out.println("Programm wird beendet...");
+                    break;
                 }
-            } else if ( choice == 5) {
-                break;
-            } else {
-                System.out.println("Ungültige Auswahl, bitte versuchen Sie es erneut");
             }
+        } catch (Exception e) {//bei ungültiger Eingabe, falscher eingabe wird es gecatcht und die Methode neu gestartet
+            System.out.println("Ungültige Auswahl, bitte versuchen Sie es erneut");
+            flashCardProgramm();
         }
     }
 }
