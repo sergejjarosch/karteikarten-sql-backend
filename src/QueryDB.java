@@ -12,7 +12,7 @@ public class QueryDB {
 
             if (rs.next()) {
                 String frage = rs.getString("frage");
-                System.out.println("Frage: " + frage);
+                System.out.println(frage);
             } else {
                 System.out.println("Kein Eintrag gefunden.");
             }
@@ -33,7 +33,7 @@ public class QueryDB {
 
             if (rs.next()) {
                 String antwort = rs.getString("antwort");
-                System.out.println("Antwort: " + antwort);
+                System.out.println(antwort);
             } else {
                 System.out.println("Kein Eintrag gefunden.");
             }
