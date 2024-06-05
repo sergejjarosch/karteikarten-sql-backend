@@ -41,6 +41,39 @@ public class QueryDB {
         return "keine Kategorie zugeordnet";
     }
 
+    //wissensstand setzen
+    public static void setKnowledge(int knowledge, int id) {
+        String sql = "UPDATE karte SET wissensstand = ? WHERE ID = ?;";
+
+        try (Connection con = ConnectDB.getConnection();
+                PreparedStatement pst = con.prepareStatement(sql)) {
+            pst.setInt(1, knowledge);
+            pst.setInt(2, id);
+            int affectedRows = pst.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int getKnowledge(int id){
+            String sql ="SELECT wissensstand FROM karte WHERE id = ?";
+            try {
+                Connection con = ConnectDB.getConnection();
+                PreparedStatement pst = con.prepareStatement(sql);
+                pst.setInt(1, id);
+                ResultSet rs = pst.executeQuery();
+                rs.next();
+
+                int wissensstand = rs.getInt("wissensstand");
+                rs.close();
+                return wissensstand;
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return 0;
+    }
+
     // Abfrage für die Frage aus der DB
     public static String frageById(int id) {
         String sql = "SELECT frage FROM karte WHERE id = ?";
