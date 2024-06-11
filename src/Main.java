@@ -1,3 +1,4 @@
+import java.sql.Connection;
 import java.util.Scanner;
 
 public class Main {
@@ -20,12 +21,14 @@ public class Main {
 
     public static void flashCardProgramm () {
         try {
+            Connection con = ConnectDB.getConnection();
             int id = 1;
             int rangeQuestions = QueryDB.sumQuestions();
             String kategorie = QueryDB.getKategorie(id);
 
             while (true){
                 Scanner scanner = new Scanner(System.in);
+                con.close();
                 System.out.println
                         ("------------------------\n"+
                                 "•1• Frage zeigen       ❔\n"+
@@ -41,6 +44,7 @@ public class Main {
                     System.out.println("Frage Nr.: " + id );
                     System.out.println(QueryDB.frageById(id));
                     System.out.println("\nDein wissensstand der Frage ist: " + QueryDB.getKnowledge(id));
+                    con.close();
 
                 } else if ( choice == 2 ) { // Antwort mit der ID 1 wird aufgerufen
                     System.out.println("Antwort Nr.: " + id );
@@ -103,5 +107,6 @@ public class Main {
             System.out.println("Ungültige Auswahl, bitte versuchen Sie es erneut");
             flashCardProgramm();
         }
+
     }
 }
